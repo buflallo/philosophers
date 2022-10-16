@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hlachkar <hlachkar@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hlachkar <hlachkar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 17:11:18 by hlachkar          #+#    #+#             */
-/*   Updated: 2022/10/10 19:54:38 by hlachkar         ###   ########.fr       */
+/*   Updated: 2022/10/16 05:04:00 by hlachkar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <errno.h>
 
 typedef struct s_info
 {
@@ -26,7 +27,10 @@ typedef struct s_info
 	int	time_to_eat;
 	int	time_to_sleep;
 	int start_time;
-	pthread_mutex_t *print;
+	int end;
+	int nb_philo;
+	pthread_mutex_t print;
+	pthread_mutex_t check;
 }	t_info;
 
 typedef struct s_philo
@@ -35,9 +39,15 @@ typedef struct s_philo
 	pthread_t	thread;
 	int			is_dead;
 	int			last_eat;
+	int			nb_meals;
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	*right_fork;
-	t_info		info;
+	t_info		*info;
 }	t_philo;
 
+int		get_time(int star_time);
+int 	check_dead(t_philo *philo);
+void	*routine(void *arg);
+void 	ssleep(int time);
+int		lock(pthread_mutex_t *mutex);
 #endif
