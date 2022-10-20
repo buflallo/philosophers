@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hlachkar <hlachkar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 17:11:18 by hlachkar          #+#    #+#             */
-/*   Updated: 2022/10/16 05:04:00 by hlachkar         ###   ########.fr       */
+/*   Updated: 2022/10/20 01:22:23 by hlachkar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
 # include <string.h>
 # include <stdio.h>
@@ -20,6 +20,9 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <errno.h>
+# include <semaphore.h>
+# include <signal.h>
+# include <stdatomic.h>
 
 typedef struct s_info
 {
@@ -29,25 +32,22 @@ typedef struct s_info
 	int start_time;
 	int end;
 	int nb_philo;
-	pthread_mutex_t print;
-	pthread_mutex_t check;
+	sem_t *print;
+	sem_t *check;
+	sem_t	*forks;
 }	t_info;
 
 typedef struct s_philo
 {
 	int			id;
+	int			pid;
 	pthread_t	thread;
 	int			is_dead;
 	int			last_eat;
 	int			nb_meals;
-	pthread_mutex_t	left_fork;
-	pthread_mutex_t	*right_fork;
 	t_info		*info;
 }	t_philo;
 
 int		get_time(int star_time);
-int 	check_dead(t_philo *philo);
-void	*routine(void *arg);
 void 	ssleep(int time);
-int		lock(pthread_mutex_t *mutex);
 #endif

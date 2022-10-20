@@ -1,0 +1,27 @@
+0 1 phil Take left
+0 1 phil Take Right
+0 1 phil is eating
+200 1 phil is sleeping
+400 1 phil is thinking
+401 1 phil Take left
+401 1 phil Take Right
+401 1 phil is eating
+601 1 phil is sleeping
+801 1 phil is thinking
+801 1 phil Take left
+801 1 phil Take Right
+801 1 phil is eating
+1001 1 phil is sleeping
+1201 1 phil is thinking
+1201 1 phil Take left
+1201 1 phil Take Right
+1201 1 phil is eating
+1401 1 phil is sleeping
+1601 1 phil is thinking
+1601 1 phil Take left
+1601 1 phil Take Right
+1601 1 phil is eating
+philo 1 is dead
+philo 2 is dead
+philo 3 is dead
+philo 4 is dead

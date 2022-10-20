@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus_main.c                                       :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hlachkar <hlachkar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 17:15:30 by hlachkar          #+#    #+#             */
-/*   Updated: 2022/10/16 03:48:56 by hlachkar         ###   ########.fr       */
+/*   Updated: 2022/10/19 03:27:22 by hlachkar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	main(int argc, char **argv)
 {
-	t_philo		philo[atoi(argv[1])];
+	t_philo		*philo;
 	int			i;
 	t_info *info;
 	
@@ -25,13 +25,12 @@ int	main(int argc, char **argv)
 		printf("Error: Wrong number of arguments\n");
 		return (0);
 	}
-	
 	info = malloc(sizeof(t_info));
 	info->nb_philo = atoi(argv[1]);
+	philo = malloc(sizeof(t_philo) * info->nb_philo);
 	info->time_to_die = atoi(argv[2]);
 	info->time_to_eat = atoi(argv[3]);
 	info->time_to_sleep = atoi(argv[4]);
-	info->end = 0;
 	if (pthread_mutex_init(&info->print, NULL) || pthread_mutex_init(&info->check, NULL))
 		return (1);
 	while (i < info->nb_philo)
@@ -42,7 +41,13 @@ int	main(int argc, char **argv)
 		if (argv[5])
 			philo[i].nb_meals = atoi(argv[5]);
 		philo[i].last_eat = get_time(0);
-		pthread_mutex_init(&philo[i].fork, NULL);
+		pthread_mutex_init(&philo[i].left_fork, NULL);
+		if (philo[i].id == info->nb_philo)
+			philo[i].right_fork = &philo[0].left_fork;
+		else
+		{
+			philo[i].right_fork = &philo[i+1].left_fork;
+		}
 		philo[i].info = info;
 		i++;
 	}
@@ -50,7 +55,7 @@ int	main(int argc, char **argv)
 	while (i < info->nb_philo)
 	{
 		lock(&(info->print));
-		philo[i].info->start_time = get_time(0);
+		info->start_time = get_time(0);
 		pthread_mutex_unlock(&(info->print));
 		if (pthread_create(&philo[i].thread, NULL, routine, (t_philo *)&philo[i]) != 0)
 		{
@@ -60,7 +65,7 @@ int	main(int argc, char **argv)
 		pthread_detach(philo[i].thread);
 		i++;
 	}
-	while (!check_dead(philo))
+	while (!check_dead(philo, info))
 	;
 	return (0);
 }
